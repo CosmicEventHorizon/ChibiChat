@@ -81,7 +81,9 @@ class MainActivity : AppCompatActivity() {
         subStringArray.clear()
         var tmp = ""
         stopToken = stopToken + ",";
-        subString = subString + ",";
+        if(subString != "") {
+            subString = subString + ",";
+        }
         for (charIndex in stopToken.indices) {
             if (stopToken[charIndex] == ',') {
                 stopTokenArray.add(tmp)
@@ -116,8 +118,10 @@ class MainActivity : AppCompatActivity() {
                 val jsonIndex = jsonResult.getJSONObject(0)
                 val jsonText = jsonIndex.get("text")
                 result = jsonText.toString()
-                for (item in subStringArray){
-                    result = result.substringBefore(item)
+                if (subStringArray.isNotEmpty() && subStringArray.size>0) {
+                    for (item in subStringArray) {
+                        result = result.substringBefore(item)
+                    }
                 }
                 addMessage(result)
                 promptsList = promptsList + result
