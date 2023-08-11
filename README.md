@@ -23,11 +23,11 @@ Pressing the "Reset To Defaul" button will fill the spaces with a template setti
 - **The default settings work with many models** but check the model's page and its prompt template on how the model is trained to achieve the best results.  
 
 ## To-Do
--The app is only instruct mode currently, newer modes will be added eventually
--Save and Load Story options 
--Import/Export settings
--Support for automating android local language models
--Support for more settings such as temperature
--More functionalities such as copy-paste the text
--UI improvments
--etc. etc.
+- The app is only instruct mode currently, newer modes will be added eventually
+- Save and Load Story options 
+- Import/Export settings
+- Support for automating android local language models
+- Support for more settings such as temperature
+- More functionalities such as copy-paste the text
+- UI improvments
+- etc. etc.
