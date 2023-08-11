@@ -10,7 +10,7 @@ Alternatively, koboldcpp can be built on termux on the android device (tutorials
 ### Usage
 1. Download and install the latest apk uploaded in the [releases](https://github.com/Blood-Pirouette/ChibiChat/releases) section
 2. Start the model locally on your computer or android device and list the IP Address
-3. Open ChibiChat on your device, go to settings and type the IP address under the "IP Address of the server" heading then press "Save"
+3. Open ChibiChat on your device, go to settings and type the IP address under the "IP Address of the server" heading (without the port number, example: 192.168.1.100) then press "Save". Port number is hardcoded as of the lastest version (5001)
 ### Options
 In the settings page, numerous options are listed to control what gets sent to the koboldcpp API. Pressing the "Reset To Default" button will fill the spaces with a template settings to follow. Taking [airoboros](https://huggingface.co/TheBloke/airoboros-l2-13b-gpt4-2.0-GGML) prompt template as an example:
 - User_Identifier will be USER: and AI_Identifier will be ASSISTANT: 
