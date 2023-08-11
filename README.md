@@ -6,7 +6,7 @@ Android app to communicate with koboldcpp local API endpoint
 ## Getting Started
 The app communicates with Koboldcpp API endpoints which can be hosted locally on the phone or on a computer device on the **same network**  
 For running Koboldcpp on your computer device follow the instructions on LostRuin's github: https://github.com/LostRuins/koboldcpp
-Alternatively, koboldcpp can be built on termux on the android device (tutorials online depending on the size of the model and your needs)
+Alternatively, koboldcpp can be built on termux on the android device (tutorials are present online depending on the size of the model and your needs)
 ### Usage
 1. Download and install the latest apk uploaded in the [releases](https://github.com/Blood-Pirouette/ChibiChat/releases) section
 2. Start the model locally on your computer or android device and list the IP Address
