@@ -31,6 +31,7 @@ DownloadModel() {
 
 if [ -d "$HOME/koboldcpp" ]; then
     if [ -f "$HOME/koboldcpp/ggml-alpaca-7b-q4.bin" ]; then
+          cd "$HOME/koboldcpp"
           python koboldcpp.py ggml-alpaca-7b-q4.bin
     else
         DownloadModel
