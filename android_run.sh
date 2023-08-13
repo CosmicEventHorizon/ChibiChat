@@ -18,14 +18,24 @@ InstallKoboldcpp() {
     cd "$HOME/koboldcpp"
     make
     wget https://huggingface.co/Sosaka/Alpaca-native-4bit-ggml/resolve/main/ggml-alpaca-7b-q4.bin
-    python koboldcpp.py ggml-alpaca-7b-q4
+    python koboldcpp.py ggml-alpaca-7b-q4.bin
+
+}
+DownloadModel() {
+    cd "$HOME/koboldcpp"
+    wget https://huggingface.co/Sosaka/Alpaca-native-4bit-ggml/resolve/main/ggml-alpaca-7b-q4.bin
+    python koboldcpp.py ggml-alpaca-7b-q4.bin
 
 }
 
 
-if [ ! -d "$HOME/koboldcpp" ]; then
-    InstallKoboldcpp
+if [ -d "$HOME/koboldcpp" ]; then
+    if [ -f "$HOME/folder/ggml-alpaca-7b-q4.bin" ]; then
+          python koboldcpp.py ggml-alpaca-7b-q4.bin
+    else
+        DownloadModel
+    fi
 else
-    cd "$HOME/koboldcpp"
-    python koboldcpp.py ggml-alpaca-7b-q4
+    InstallKoboldcpp
 fi
+
