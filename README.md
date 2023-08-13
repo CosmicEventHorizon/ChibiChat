@@ -1,7 +1,7 @@
 # ChibiChat
 Android app to communicate with koboldcpp local API endpoint
 
-![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/miku.png?raw=true)
+![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/miku.png?raw=true)  ![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg?raw=true)
 
 ## Getting Started
 The app communicates with Koboldcpp API endpoints which can be hosted locally on the phone or on a computer device on the **same network**  
