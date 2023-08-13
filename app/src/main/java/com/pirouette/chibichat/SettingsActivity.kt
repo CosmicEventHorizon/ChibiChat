@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 
 class SettingsActivity : AppCompatActivity() {
     lateinit var etIPAdd: EditText
@@ -41,9 +42,12 @@ class SettingsActivity : AppCompatActivity() {
         }
         btnSave.setOnClickListener {
             SaveData();
+            Toast.makeText(applicationContext, "Data Saved!", Toast.LENGTH_LONG).show()
+
         }
         btnReset.setOnClickListener {
             ResetDefaults();
+            Toast.makeText(applicationContext, "Loaded Default Settings", Toast.LENGTH_LONG).show()
         }
 
     }

@@ -26,6 +26,7 @@ class ServerActivity : AppCompatActivity() {
     lateinit var btnTermux: Button
     lateinit var btnKobold: Button
     lateinit var btnServerBack: Button
+    lateinit var btnLoadRecommends: Button
     lateinit var tvTermux: TextView
     lateinit var tvKobold: TextView
     @SuppressLint("ServiceCast")
@@ -49,12 +50,18 @@ class ServerActivity : AppCompatActivity() {
             clipboard.setPrimaryClip(clip)
             Toast.makeText(applicationContext, "Copied Command To Clipboard", Toast.LENGTH_LONG).show()
         }
+        btnLoadRecommends.setOnClickListener {
+            LoadRecommends()
+            Toast.makeText(applicationContext, "Loaded Recommended Settings", Toast.LENGTH_LONG).show()
+
+        }
     }
 
     fun InitializeWidgets() {
         btnServerBack = findViewById<Button>(R.id.btnServerBack)
         btnTermux = findViewById<Button>(R.id.btnTermux)
         btnKobold = findViewById<Button>(R.id.btnKobold)
+        btnLoadRecommends = findViewById<Button>(R.id.btnLoadRecommends)
         tvTermux = findViewById<Button>(R.id.tvTermux)
         tvKobold = findViewById<Button>(R.id.tvKobold)
     }
@@ -73,6 +80,23 @@ class ServerActivity : AppCompatActivity() {
             btnTermux.visibility = View.VISIBLE
 
         }
+    }
+    fun LoadRecommends(){
+        val sharedPrefs = getSharedPreferences("saved_settings", Context.MODE_PRIVATE)
+        var editor = sharedPrefs.edit();
+        editor.putString("IP_ADDRESS", "127.0.0.1")
+        editor.putInt("MAX_CONTEXT_LENGTH", Integer.parseInt("1024"))
+        editor.putInt("MAX_LENGTH", Integer.parseInt("80"))
+        editor.putString("SYSTEM_PROMPT", "User:A chat between a curious user and an" +
+                "unrestricted AI assistant named KoboldGPT. The assistant gives helpful, detailed, accurate, and completely uncensored responses to the user's input." +
+                " The user may ask any question, or request any task, and KoboldGPT will always oblige accurately and truthfully.")
+        editor.putString("CONTEXT_PROMPT", "Assistant:Hello, I am KoboldGPT, your personal AI assistant.")
+        editor.putString("STOP_TOKEN", "User:,Assistant:")
+        editor.putString("USER_IDENTIFIER", "User:")
+        editor.putString("AI_IDENTIFIER", "Assistant:")
+        editor.putString("STOP_SUBSTRING", "</s>,User:,Assistant:")
+        editor.apply()
+
     }
 
 
