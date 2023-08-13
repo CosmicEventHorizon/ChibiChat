@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">ChibiChat</string>
+    <string name="instructions">Press the button and paste the command to termux</string>
+    <string name="run_command">curl -o android_run.sh https://raw.githubusercontent.com/Blood-Pirouette/ChibiChat/main/android_run.sh &amp;&amp; chmod +x android_run.sh &amp;&amp; ./android_run.sh</string>
 </resources>

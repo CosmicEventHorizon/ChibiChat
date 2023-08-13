@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Environment
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Button
@@ -19,6 +20,7 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import org.json.JSONObject
+import java.io.File
 import kotlin.math.max
 
 
@@ -47,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        CreateFolder()
         btnSend = findViewById(R.id.btnSendText)
         etPrompt = findViewById(R.id.etPrompt)
         //tvCheck = findViewById(R.id.tvOutput)
@@ -123,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                         result = result.substringBefore(item)
                     }
                 }
-                addMessage(result)
+                AddMessage(result)
                 promptsList = promptsList + result
             },
             { error ->
@@ -144,7 +147,7 @@ class MainActivity : AppCompatActivity() {
         volleyQueue.add(jsonObjectRequest);
     }
 
-    fun addMessage (message: String)
+    fun AddMessage (message: String)
     {
         if (message.first() == ' ') {
             msgData.add(Message("Kobold:" + message, 1))
@@ -153,6 +156,13 @@ class MainActivity : AppCompatActivity() {
         }
         adapter.notifyDataSetChanged()
         recyclerview.scrollToPosition(msgData.size - 1);
+    }
+    fun CreateFolder(){
+        val folder = File(Environment.getExternalStorageDirectory(), "ChibiChat")
+        if(!folder.exists()) {
+        folder.mkdir()
+        }
+
     }
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
@@ -164,6 +174,11 @@ class MainActivity : AppCompatActivity() {
             R.id.opSettings -> {
                 val settingsPage = Intent(this, SettingsActivity::class.java);
                 startActivity(settingsPage);
+                true
+            }
+            R.id.opServer ->{
+                val serverPage = Intent(this, ServerActivity::class.java);
+                startActivity(serverPage);
                 true
             }
             else -> super.onOptionsItemSelected(item)
