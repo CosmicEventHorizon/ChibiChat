@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">ChibiChat</string>
-    <string name="instructions">Press the button and paste the command to termux</string>
+    <string name="instructions">Press the button and paste the command to termux.
+Note: You need at least 8 gb of RAM in your device to run this model locally. After the server runs, you can press on "Load Recommended Settings" for the model.
+    </string>
     <string name="run_command">curl -o android_run.sh https://raw.githubusercontent.com/Blood-Pirouette/ChibiChat/main/android_run.sh &amp;&amp; chmod +x android_run.sh &amp;&amp; ./android_run.sh</string>
 </resources>

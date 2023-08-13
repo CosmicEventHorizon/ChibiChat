@@ -17,8 +17,8 @@ InstallKoboldcpp() {
     git clone https://github.com/LostRuins/koboldcpp
     cd "$HOME/koboldcpp"
     make
-    wget https://huggingface.co/concedo/rwkv-v4-169m-ggml/resolve/main/rwkv-169m-q4_0new.bin
-    python koboldcpp.py rwkv-169m-q4_0new.bin
+    wget https://huggingface.co/Sosaka/Alpaca-native-4bit-ggml/resolve/main/ggml-alpaca-7b-q4.bin
+    python koboldcpp.py ggml-alpaca-7b-q4
 
 }
 
@@ -27,5 +27,5 @@ if [ ! -d "$HOME/koboldcpp" ]; then
     InstallKoboldcpp
 else
     cd "$HOME/koboldcpp"
-    python koboldcpp.py rwkv-169m-q4_0new.bin
+    python koboldcpp.py ggml-alpaca-7b-q4
 fi

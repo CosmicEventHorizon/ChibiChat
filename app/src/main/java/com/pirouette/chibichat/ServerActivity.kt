@@ -38,7 +38,7 @@ class ServerActivity : AppCompatActivity() {
             finish()
         }
         btnTermux.setOnClickListener {
-            val url = "https://github.com/termux/termux-app/releases/tag/v0.118.0"
+            val url = "https://github.com/termux/termux-app/releases/download/v0.118.0/termux-app_v0.118.0+github-debug_universal.apk"
             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url))
             startActivity(intent)
         }
