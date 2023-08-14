@@ -23,7 +23,7 @@ In the settings page, numerous options are listed to control what gets sent to t
 - **The default settings work with many models** but check the model's page and its prompt template on how the model is trained to achieve the best results.  
 
 ## Launch Koboldcpp Server Locally on the Android Device
-- As of v1.1, an option menu "Launch Android Server" is present to make running a local server easier. Termux is required for the installation.
+- As of v1.1, an option menu "Launch Android Server" is present to make running a local server easier. [Termux](https://github.com/termux) is required for the installation.
 - Copy and paste the command to termux and wait for the server to start.
 - Press Load Recommended Settings to load optimal settings for the model.
 - As of v1.1, only Alpaca 7B is listed as an option. This wil eventuially be expanded on.
