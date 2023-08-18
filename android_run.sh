@@ -1,5 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
+DownloadDep(){
 yes | pkg update
 yes | pkg upgrade
 
@@ -10,10 +11,11 @@ for dep in "${dependencies[@]}"; do
 done
 
 pkg install -y python
-
+}
 
 InstallKoboldcpp() {
     echo "Installing Koboldcpp"
+    DownloadDep()
     git clone https://github.com/LostRuins/koboldcpp
     cd "$HOME/koboldcpp"
     make
