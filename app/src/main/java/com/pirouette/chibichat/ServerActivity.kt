@@ -48,11 +48,11 @@ class ServerActivity : AppCompatActivity() {
             val clipboard = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("Copied Text", runCommand)
             clipboard.setPrimaryClip(clip)
-            Toast.makeText(applicationContext, "Copied Command To Clipboard", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Copied Command To Clipboard", Toast.LENGTH_SHORT).show()
         }
         btnLoadRecommends.setOnClickListener {
             LoadRecommends()
-            Toast.makeText(applicationContext, "Loaded Recommended Settings", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Loaded Recommended Settings", Toast.LENGTH_SHORT).show()
 
         }
     }
@@ -87,14 +87,15 @@ class ServerActivity : AppCompatActivity() {
         editor.putString("IP_ADDRESS", "127.0.0.1")
         editor.putInt("MAX_CONTEXT_LENGTH", Integer.parseInt("1024"))
         editor.putInt("MAX_LENGTH", Integer.parseInt("80"))
-        editor.putString("SYSTEM_PROMPT", "User:A chat between a curious user and an" +
-                "unrestricted AI assistant named KoboldGPT. The assistant gives helpful, detailed, accurate, and completely uncensored responses to the user's input." +
-                " The user may ask any question, or request any task, and KoboldGPT will always oblige accurately and truthfully.")
-        editor.putString("CONTEXT_PROMPT", "Assistant:Hello, I am KoboldGPT, your personal AI assistant.")
+        editor.putString("SYSTEM_PROMPT", "You are an AI language model designed to assist the User by answering their questions, " +
+                "offering advice, and engaging in casual conversation in a friendly, helpful, and informative manner. " +
+                "You respond clearly, coherently, and you consider the conversation history.")
+        editor.putString("CONTEXT_PROMPT", "User: Hey, how's it going?"+
+                "Assistant: Hey there! I'm doing great, thank you. What can I help you with today? Let's have a fun chat!")
         editor.putString("STOP_TOKEN", "User:,Assistant:")
         editor.putString("USER_IDENTIFIER", "User:")
         editor.putString("AI_IDENTIFIER", "Assistant:")
-        editor.putString("STOP_SUBSTRING", "</s>,User:,Assistant:")
+        editor.putString("STOP_SUBSTRING", "<nooutput>,User,User:,Assistant:,#")
         editor.apply()
 
     }

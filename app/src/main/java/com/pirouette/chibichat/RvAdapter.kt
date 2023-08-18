@@ -13,7 +13,6 @@ class RvAdapter (val msgArray: List<Message>) : RecyclerView.Adapter<RvAdapter.V
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RvAdapter.ViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.chat_message, parent, false)
-
         return ViewHolder(view)
     }
 

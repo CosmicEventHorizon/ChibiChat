@@ -7,6 +7,18 @@
         android:title="Settings"
         app:showAsAction="never"/>
     <item
+        android:id="@+id/opSave"
+        android:title="Save Story"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/opLoad"
+        android:title="Load Story"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/opClear"
+        android:title="Clear Conversation"
+        app:showAsAction="never"/>
+    <item
         android:id="@+id/opServer"
         android:title="Launch Android Server"
         app:showAsAction="never"/>

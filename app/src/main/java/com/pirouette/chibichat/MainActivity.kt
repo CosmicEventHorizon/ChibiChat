@@ -5,13 +5,10 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Environment
-import android.view.Menu
-import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
-import android.widget.Toast
+import android.view.*
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.android.volley.DefaultRetryPolicy
@@ -22,6 +19,7 @@ import com.google.gson.Gson
 import org.json.JSONObject
 import java.io.File
 import kotlin.math.max
+import kotlin.random.Random
 
 
 class MainActivity : AppCompatActivity() {
@@ -41,7 +39,8 @@ class MainActivity : AppCompatActivity() {
         lateinit var subString: String
         val stopTokenArray: ArrayList<String> = ArrayList()
         val subStringArray: ArrayList<String> = ArrayList()
-        val msgData = ArrayList<Message>()
+        var msgData = ArrayList<Message>()
+        val savedStoryData = ArrayList<SavedData>()
         var promptsList = ""
 
 
@@ -181,10 +180,63 @@ class MainActivity : AppCompatActivity() {
                 startActivity(serverPage);
                 true
             }
+            R.id.opSave ->{
+                val randomNum = Random.nextInt(1,10).toString()
+                val currentMsgData = ArrayList(msgData)
+                val savedDataObject = SavedData("Save " + randomNum, currentMsgData, promptsList)
+                savedStoryData.add(savedDataObject)
+                true
+            }
+            R.id.opClear ->{
+                msgData.clear()
+                promptsList = ""
+                adapter.notifyDataSetChanged()
+                true
+            }
+            R.id.opLoad ->{
+                ShowPopUp()
+                true
+            }
             else -> super.onOptionsItemSelected(item)
         }
     }
+    fun ShowPopUp(){
+        val inflater = LayoutInflater.from(this)
+        val popupView: View = inflater.inflate(R.layout.activity_load, null)
+        val container: RecyclerView = popupView.findViewById<RecyclerView>(R.id.rvLoads)
+        val btnDeleteStory: Button = popupView.findViewById<Button>(R.id.btnDeleteStory)
+        val btnLoadStory: Button = popupView.findViewById<Button>(R.id.btnLoadStory)
+        val popupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+        popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
 
+        container.layoutManager = LinearLayoutManager(this)
+        val popupAdapter = RvLoadAdapter(savedStoryData)
+        container.adapter = popupAdapter
+        btnDeleteStory.setOnClickListener(){
+            val position = popupAdapter.selectedPosition
+            if (position != RecyclerView.NO_POSITION) {
+                savedStoryData.removeAt(position)
+                popupAdapter.selectedPosition = RecyclerView.NO_POSITION
+                popupAdapter.notifyDataSetChanged()
+            }
+        }
+        btnLoadStory.setOnClickListener(){
+            val position = popupAdapter.selectedPosition
+            if (position != RecyclerView.NO_POSITION) {
+                msgData.clear()
+                msgData.addAll(savedStoryData[position].savedDataArray)
+                promptsList = savedStoryData[position].promptListSaved
+                Toast.makeText(applicationContext, savedStoryData[position].name + " loaded!", Toast.LENGTH_SHORT).show()
+
+            }
+        }
+   
+    }
 
 
 }

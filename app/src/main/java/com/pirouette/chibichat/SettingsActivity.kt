@@ -42,12 +42,12 @@ class SettingsActivity : AppCompatActivity() {
         }
         btnSave.setOnClickListener {
             SaveData();
-            Toast.makeText(applicationContext, "Data Saved!", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Data Saved!", Toast.LENGTH_SHORT).show()
 
         }
         btnReset.setOnClickListener {
             ResetDefaults();
-            Toast.makeText(applicationContext, "Loaded Default Settings", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, "Loaded Default Settings", Toast.LENGTH_SHORT).show()
         }
 
     }
