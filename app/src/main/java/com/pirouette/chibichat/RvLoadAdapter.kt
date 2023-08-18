@@ -24,6 +24,7 @@ class RvLoadAdapter (val loadData: ArrayList<SavedData>) : RecyclerView.Adapter<
     override fun onBindViewHolder(holder: RvLoadAdapter.ViewHolder, position: Int) {
         val loadDataHolder = loadData[position].name
 
+
         // sets the text to the textview from our itemHolder class
         holder.textView.text = loadDataHolder
         if (selectedPosition == position) {

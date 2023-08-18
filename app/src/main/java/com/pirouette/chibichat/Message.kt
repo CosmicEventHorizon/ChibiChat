@@ -1,8 +1,5 @@
 package com.pirouette.chibichat
 
-import android.text.Editable
+import java.io.Serializable
 
-data class Message(val msgContent: String, val user: Int)
-{
-
-}
+data class Message(val msgContent: String, val user: Int): Serializable

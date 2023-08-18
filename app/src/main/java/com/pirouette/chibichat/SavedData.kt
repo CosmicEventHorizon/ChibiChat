@@ -1,8 +1,4 @@
 package com.pirouette.chibichat
+import java.io.Serializable
 
-import android.text.Editable
-
-data class SavedData(val name: String, val savedDataArray: ArrayList<Message>, val promptListSaved: String)
-{
-
-}
+data class SavedData(val name: String, val savedDataArray: ArrayList<Message>, val promptListSaved: MutableList<String>): Serializable
