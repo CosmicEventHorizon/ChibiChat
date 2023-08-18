@@ -12,7 +12,7 @@ DownloadDep(){
 
 InstallKoboldcpp() {
     echo "Installing Koboldcpp"
-    DownloadDep()
+    DownloadDep
     git clone https://github.com/LostRuins/koboldcpp
     cd "$HOME/koboldcpp"
     make
