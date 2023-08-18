@@ -1,12 +1,13 @@
 # ChibiChat
-Android app to communicate with koboldcpp local API endpoint
+ChibiChat is an Android app deisgned to communicate with koboldcpp API endpoint, licensed under [GNU General Public License version 3](https://github.com/Blood-Pirouette/ChibiChat/blob/main/LICENSE)
 
-![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/miku.png?raw=true)
+![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/miku.png?raw=true)  ![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg?raw=true)
 
 ## Getting Started
 The app communicates with Koboldcpp API endpoints which can be hosted locally on the phone or on a computer device on the **same network**  
-For running Koboldcpp on your computer device follow the instructions on LostRuin's github: https://github.com/LostRuins/koboldcpp
-Alternatively, koboldcpp can be built on termux on the android device (tutorials are present online depending on the size of the model and your needs)
+For running Koboldcpp on your computer device follow the instructions on LostRuin's [github](https://github.com/LostRuins/koboldcpp).
+Alternatively, koboldcpp can be built on termux on the android device. A script is hosted on this repo to automate the process (See below). 
+
 ### Usage
 1. Download and install the latest apk uploaded in the [releases](https://github.com/Blood-Pirouette/ChibiChat/releases) section
 2. Start the model locally on your computer or android device and list the IP Address
@@ -21,11 +22,18 @@ In the settings page, numerous options are listed to control what gets sent to t
 - When done press Save
 - **The default settings work with many models** but check the model's page and its prompt template on how the model is trained to achieve the best results.  
 
+## Launch Koboldcpp Server Locally on the Android Device
+- As of v1.1, an option menu "Launch Android Server" is present to make running a local server easier. [Termux](https://github.com/termux) is required for the installation.
+- Copy and paste the command to termux and wait for the server to start.
+- Press Load Recommended Settings to load optimal settings for the model.
+- As of v1.1, only Alpaca 7B is listed as an option. This wil eventuially be expanded on.
+- Note that at least 8gb of RAM is needed to run this model locally. Creating a swap file is recommended if your phone is rooted.
+
 ## To-Do
 - The app is only instruct mode currently, newer modes will be added eventually
 - Save and Load Story options 
 - Import/Export settings
-- Support for automating android local language models
+- Support for more language models
 - Support for more settings such as temperature
 - More functionalities such as copy-paste the text
 - UI improvments
