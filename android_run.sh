@@ -1,6 +1,9 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-DownloadDep(){
+
+
+InstallKoboldcpp() {
+    echo "Installing Koboldcpp"
     yes | pkg update
     yes | pkg upgrade
     dependencies=("clang" "wget" "git" "cmake")
@@ -8,11 +11,6 @@ DownloadDep(){
         pkg install -y "$dep"
     done
     pkg install -y python
-}
-
-InstallKoboldcpp() {
-    echo "Installing Koboldcpp"
-    DownloadDep
     git clone https://github.com/LostRuins/koboldcpp
     cd "$HOME/koboldcpp"
     make
