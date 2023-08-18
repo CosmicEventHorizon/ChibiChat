@@ -1,16 +1,13 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
 DownloadDep(){
-yes | pkg update
-yes | pkg upgrade
-
-dependencies=("clang" "wget" "git" "cmake")
-
-for dep in "${dependencies[@]}"; do
-    pkg install -y "$dep"
-done
-
-pkg install -y python
+    yes | pkg update
+    yes | pkg upgrade
+    dependencies=("clang" "wget" "git" "cmake")
+    for dep in "${dependencies[@]}"; do
+        pkg install -y "$dep"
+    done
+    pkg install -y python
 }
 
 InstallKoboldcpp() {
