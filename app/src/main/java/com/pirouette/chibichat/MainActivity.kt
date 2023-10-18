@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         val stopTokenArray: ArrayList<String> = ArrayList()
         val subStringArray: ArrayList<String> = ArrayList()
         var msgData = ArrayList<Message>()
-        val savedStoryData = ArrayList<SavedData>()
+        var savedStoryData = ArrayList<SavedData>()
         var convArray = mutableListOf<String>()
 
 
@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         recyclerview.layoutManager = LinearLayoutManager(this)
         adapter = RvAdapter(msgData)
         recyclerview.adapter = adapter
+        savedStoryData = loadArrayFromFile(this)
         btnSend.setOnClickListener()
         {
             LoadData()
@@ -278,7 +279,6 @@ class MainActivity : AppCompatActivity() {
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            msgData.add(Message("System: " + e.toString(), 2))
             ArrayList()
         }
     }
