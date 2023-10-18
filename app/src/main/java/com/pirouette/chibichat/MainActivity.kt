@@ -207,15 +207,16 @@ class MainActivity : AppCompatActivity() {
             true
         )
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
-        val savedDataFile = loadArrayFromFile(this)
+        //val savedDataFile = loadArrayFromFile(this)
         container.layoutManager = LinearLayoutManager(this)
-        val popupAdapter = RvLoadAdapter(savedDataFile)
+        val popupAdapter = RvLoadAdapter(savedStoryData)
         container.adapter = popupAdapter
+
         btnDeleteStory.setOnClickListener(){
             val position = popupAdapter.selectedPosition
             if (position != RecyclerView.NO_POSITION) {
-                savedDataFile.removeAt(position)
-                saveArrayToFile(this, savedDataFile)
+                savedStoryData.removeAt(position)
+                saveArrayToFile(this, savedStoryData)
                 popupAdapter.selectedPosition = RecyclerView.NO_POSITION
                 popupAdapter.notifyDataSetChanged()
             }
@@ -224,11 +225,11 @@ class MainActivity : AppCompatActivity() {
             val position = popupAdapter.selectedPosition
             if (position != RecyclerView.NO_POSITION) {
                 msgData.clear()
-                msgData.addAll(savedDataFile[position].savedDataArray)
+                msgData.addAll(savedStoryData[position].savedDataArray)
                 convArray.clear()
-                convArray.addAll(savedDataFile[position].promptListSaved)
+                convArray.addAll(savedStoryData[position].promptListSaved)
                 adapter.notifyDataSetChanged()
-                Toast.makeText(applicationContext, savedDataFile[position].name + " Loaded!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, savedStoryData[position].name + " Loaded!", Toast.LENGTH_SHORT).show()
 
             }
         }
