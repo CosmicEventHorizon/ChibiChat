@@ -5,7 +5,7 @@ ChibiChat is an Android app deisgned to communicate with koboldcpp API endpoint,
 <img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg" width="400" height="900">
 
 ## Getting Started
-The app communicates with Koboldcpp API endpoints which can be hosted locally on the phone or on a computer device on the **same network**  
+The app communicates with Koboldcpp API endpoints which can be hosted locally or remotely on a phone or on a computer device.
 For running Koboldcpp on your computer device follow the instructions on LostRuin's [github](https://github.com/LostRuins/koboldcpp).
 Alternatively, koboldcpp can be built on termux on the android device. A script is hosted on this repo to automate the process (See below). 
 
