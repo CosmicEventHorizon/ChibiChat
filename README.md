@@ -1,7 +1,8 @@
 # ChibiChat
 ChibiChat is an Android app deisgned to communicate with koboldcpp API endpoint, licensed under [GNU General Public License version 3](https://github.com/Blood-Pirouette/ChibiChat/blob/main/LICENSE)
 
-![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/miku.png?raw=true)  ![alt text](https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg?raw=true)
+<img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/miku.png" width="100" height="100">
+<img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg" width="400" height="900">
 
 ## Getting Started
 The app communicates with Koboldcpp API endpoints which can be hosted locally on the phone or on a computer device on the **same network**  
