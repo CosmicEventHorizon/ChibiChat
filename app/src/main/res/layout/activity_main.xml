@@ -41,7 +41,7 @@
         android:inputType="textPersonName"
         android:textColor="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnSendText"
+        app:layout_constraintEnd_toStartOf="@+id/btnDeleteLast"
         app:layout_constraintStart_toStartOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
