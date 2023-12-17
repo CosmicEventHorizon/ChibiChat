@@ -12,16 +12,6 @@
         app:layout_constraintEnd_toEndOf="parent" />-->
 
     <Button
-        android:id="@+id/btnSendText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
-        android:layout_marginEnd="2dp"
-        android:text="Send"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/etPrompt"
-        app:layout_constraintEnd_toStartOf="@id/btnDeleteLast" />
-    <Button
         android:id="@+id/btnDeleteLast"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -29,7 +19,17 @@
         android:layout_marginEnd="2dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnSendText"
+        app:layout_constraintStart_toEndOf="@id/etPrompt"
+        app:layout_constraintEnd_toStartOf="@id/btnSendText" />
+    <Button
+        android:id="@+id/btnSendText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:text="Send"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/btnDeleteLast"
         app:layout_constraintEnd_toEndOf="parent"/>
     <EditText
         android:id="@+id/etPrompt"
