@@ -34,7 +34,6 @@ In the settings page, numerous options are listed to control what gets sent to t
 - Save and Load Story options 
 - Import/Export settings
 - Support for more language models
-- Support for more settings such as temperature
 - More functionalities such as copy-paste the text
 - UI improvments
 - etc. etc.
