@@ -21,12 +21,24 @@ import java.io.*
 class MainActivity : AppCompatActivity() {
         //lateinit var tvCheck: TextView
         lateinit var btnSend: Button
+        lateinit var btnDeleteLast: Button
         lateinit var recyclerview: RecyclerView
         lateinit var etPrompt: EditText
         lateinit var adapter: RvAdapter
         lateinit var ipAdd: String
+        lateinit var port: String
         var maxContextLength = 0
         var maxLength = 0
+        var n = 0
+        var temp = 0.0f
+        var typical = 0
+        var top_p = 0.0f
+        var top_k = 0
+        var top_a = 0
+        var rep_pen = 0.0f
+        var rep_pen_range = 0
+        var rep_pen_slope = 0.0f
+        var tfs = 0
         lateinit var systemPrompt: String
         lateinit var contextPrompt: String
         lateinit var stopToken: String
@@ -46,6 +58,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         CreateFolder()
         btnSend = findViewById(R.id.btnSendText)
+        btnDeleteLast = findViewById(R.id.btnDeleteLast)
         etPrompt = findViewById(R.id.etPrompt)
         //tvCheck = findViewById(R.id.tvOutput)
         recyclerview = findViewById<RecyclerView>(R.id.rvMessages)
@@ -63,13 +76,31 @@ class MainActivity : AppCompatActivity() {
             GetJsonData()
             etPrompt.setText("")
         }
+        btnDeleteLast.setOnClickListener()
+        {
+            msgData.removeLastOrNull()
+            convArray.removeLastOrNull()
+            adapter.notifyDataSetChanged()
+            recyclerview.scrollToPosition(msgData.size - 1);
+        }
 
     }
     fun LoadData(){
         val sharedPrefs = getSharedPreferences("saved_settings", Context.MODE_PRIVATE)
         ipAdd = sharedPrefs.getString("IP_ADDRESS", null).toString()
+        port = sharedPrefs.getString("PORT", null).toString()
         maxContextLength = sharedPrefs.getInt("MAX_CONTEXT_LENGTH", 0).toInt()
         maxLength = sharedPrefs.getInt("MAX_LENGTH", 0).toInt()
+        n = sharedPrefs.getInt("N_VALUE", 0).toInt()
+        temp = sharedPrefs.getFloat("TEMPERATURE", 0.7f).toFloat()
+        typical = sharedPrefs.getInt("TYPICAL", 0).toInt()
+        top_p  = sharedPrefs.getFloat("TOP_P", 0.92f).toFloat()
+        top_k = sharedPrefs.getInt("TOP_K", 0).toInt()
+        top_a = sharedPrefs.getInt("TOP_A", 0).toInt()
+        rep_pen = sharedPrefs.getFloat("REP_PEN", 1.1f).toFloat()
+        rep_pen_range = sharedPrefs.getInt("REP_PEN_RANGE", 300).toInt()
+        rep_pen_slope = sharedPrefs.getFloat("REP_PEN_SLOPE", 0.7f).toFloat()
+        tfs = sharedPrefs.getInt("TFS_VALUE", 0).toInt()
         systemPrompt = sharedPrefs.getString("SYSTEM_PROMPT", null).toString()
         contextPrompt = sharedPrefs.getString("CONTEXT_PROMPT", null).toString()
         stopToken = sharedPrefs.getString("STOP_TOKEN", null).toString()
@@ -104,9 +135,23 @@ class MainActivity : AppCompatActivity() {
 
      fun GetJsonData(){
         val volleyQueue = Volley.newRequestQueue(this)
-        val url = "http://"+ipAdd+":5001/api/v1/generate"
+        val url = "http://"+ipAdd+":"+port+"/api/v1/generate"
         val initialPrompt = systemPrompt+contextPrompt
-        val data = JsonClass(maxContextLength = maxContextLength, maxLength = maxLength, prompt = initialPrompt + convArray.joinToString(separator = ""), stopSequence = stopTokenArray)
+        val data = JsonClass(
+            maxContextLength = maxContextLength,
+            maxLength = maxLength,
+            n = n,
+            temperature = temp,
+            typical = typical,
+            topP = top_p,
+            topA = top_a,
+            topK = top_k,
+            repPen = rep_pen,
+            repPenRange = rep_pen_range,
+            repPenSlope = rep_pen_slope,
+            tfs = tfs,
+            prompt = initialPrompt + convArray.joinToString(separator = ""),
+            stopSequence = stopTokenArray)
         val gson = Gson()
         val jsonRaw = gson.toJson(data)
         val jsonObj = JSONObject(jsonRaw)
