@@ -182,13 +182,13 @@
         android:id="@+id/tvAIIdentifier"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="2dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:text="AI_Identifier"
         android:textSize="10sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/etUserIdentifier"
-        app:layout_constraintTop_toBottomOf="@+id/tvTfs" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvUserIdentifier" />
 
     <TextView
         android:id="@+id/tvSystemPrompt"
@@ -200,7 +200,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvUserIdentifier" />
+        app:layout_constraintTop_toBottomOf="@id/tvAIIdentifier" />
 
     <TextView
         android:id="@+id/tvContextPrompt"
@@ -401,23 +401,27 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="-11dp"
+        android:layout_marginEnd="10dp"
         android:ems="10"
         android:hint="Enter value"
         android:inputType="textPersonName"
         android:textSize="10sp"
         app:layout_constraintStart_toEndOf="@+id/tvUserIdentifier"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etTfs" />
     <EditText
          android:id="@+id/etAIIdentifier"
-         android:layout_width="wrap_content"
+         android:layout_width="0dp"
          android:layout_height="wrap_content"
          android:layout_marginTop="-11dp"
+        android:layout_marginEnd="10dp"
          android:ems="10"
          android:hint="Enter value"
          android:inputType="textPersonName"
          android:textSize="10sp"
          app:layout_constraintStart_toEndOf="@+id/tvAIIdentifier"
-         app:layout_constraintTop_toBottomOf="@+id/etTfs" />
+        app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintTop_toBottomOf="@+id/etUserIdentifier" />
 
     <EditText
         android:id="@+id/etSystemPrompt"
