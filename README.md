@@ -27,8 +27,8 @@ In the settings page, numerous options are listed to control what gets sent to t
 - As of v1.1, an option menu "Launch Android Server" is present to make running a local server easier. [Termux](https://github.com/termux) is required for the installation.
 - Copy and paste the command to termux and wait for the server to start.
 - Press Load Recommended Settings to load optimal settings for the model.
-- As of v1.1, only Alpaca 7B is listed as an option. This wil eventuially be expanded on.
-- Note that at least 8gb of RAM is needed to run this model locally. Creating a swap file is recommended if your phone is rooted.
+- As of v1.1, only Alpaca 7B is listed as an option. This wil eventually be expanded on.
+- Note that at least 8gb of RAM is needed to run this model locally. Creating a swap file is recommended if your device is rooted.
 
 ## To-Do
 - The app is only instruct mode currently, newer modes will be added eventually
@@ -36,5 +36,5 @@ In the settings page, numerous options are listed to control what gets sent to t
 - Import/Export settings
 - Support for more language models
 - More functionalities such as copy-paste the text
-- UI improvments
+- UI improvements
 - etc. etc.
