@@ -1,5 +1,5 @@
 # ChibiChat
-ChibiChat is an Android app deisgned to communicate with Ollama and Koboldcpp API endpoint, licensed under [GNU General Public License version 3](https://github.com/CosmicEventHorizon/ChibiChat/blob/main/LICENSE)
+ChibiChat is an Android app deisgned to communicate with Ollama or Koboldcpp API endpoints, licensed under [GNU General Public License version 3](https://github.com/CosmicEventHorizon/ChibiChat/blob/main/LICENSE)
 
 <img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/miku.png" width="100" height="100">
 <img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg" width="400" height="900">
