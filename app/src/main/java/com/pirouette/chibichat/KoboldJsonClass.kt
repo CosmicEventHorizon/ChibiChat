@@ -2,7 +2,7 @@ package com.pirouette.chibichat
 
 import com.google.gson.annotations.SerializedName
 
-data class JsonClass (
+data class KoboldJsonClass (
     @SerializedName("n"                  ) val n                : Int?             = 1,
     @SerializedName("max_context_length" ) val maxContextLength : Int?             = 0,
     @SerializedName("max_length"         ) val maxLength        : Int?             = 0,

@@ -6,502 +6,48 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="false"
     tools:context=".SettingsActivity">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="60dp"
-        android:layout_marginEnd="16dp"
-        android:fillViewport="true">
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
     <TextView
-        android:id="@+id/tvIPAdd"
+        android:id="@+id/tvChooseServer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:text="IP address of Koboldcpp server"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="Choose Default API Server:"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    </TextView>
 
-    <TextView
-        android:id="@+id/tvMaxContextLength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="MAX_CONTEXT_LENGTH"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etIPAdd" />
-
-    <TextView
-        android:id="@+id/tvMaxLength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="MAX_LENGTH"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvMaxContextLength" />
-
-    <TextView
-        android:id="@+id/tvN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="n"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvMaxLength" />
-    <TextView
-        android:id="@+id/tvTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="temp"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/etN"
-        app:layout_constraintTop_toBottomOf="@+id/tvMaxLength" />
-    <TextView
-        android:id="@+id/tvTopP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="top_p"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvN" />
-    <TextView
-        android:id="@+id/tvTopK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="top_k"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/etTopP"
-        app:layout_constraintTop_toBottomOf="@+id/tvTemperature" />
-    <TextView
-        android:id="@+id/tvTopA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="top_a"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/etTopK"
-        app:layout_constraintTop_toBottomOf="@+id/tvTypical" />
-    <TextView
-        android:id="@+id/tvTypical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="typical"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/etTemperature"
-        app:layout_constraintTop_toBottomOf="@+id/tvMaxLength" />
-    <TextView
-        android:id="@+id/tvTfs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="tfs"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvRepPen" />
-    <TextView
-        android:id="@+id/tvRepPen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="rep_pen"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTopP" />
-    <TextView
-        android:id="@+id/tvRepPenRange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="rep_pen_range"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/etRepPen"
-        app:layout_constraintTop_toBottomOf="@+id/tvTopK" />
-    <TextView
-        android:id="@+id/tvRepPenSlope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="10dp"
-        android:text="rep_pen_slope"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/etRepPenRange"
-        app:layout_constraintTop_toBottomOf="@id/tvTopA" />
-
-
-    <TextView
-        android:id="@+id/tvUserIdentifier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="User_Identifier"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvTfs" />
-
-    <TextView
-        android:id="@+id/tvAIIdentifier"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="AI_Identifier"
-        android:textSize="10sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvUserIdentifier" />
-
-    <TextView
-        android:id="@+id/tvSystemPrompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="20dp"
-        android:text="System Prompt"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAIIdentifier" />
-
-    <TextView
-        android:id="@+id/tvContextPrompt"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="Context Prompt"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etSystemPrompt" />
-
-
-    <TextView
-        android:id="@+id/tvStopToken"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="Stop Token"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etContextPrompt" />
-
-    <TextView
-        android:id="@+id/tvSubstring"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:text="End String"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etStopToken" />
-
-    <EditText
-        android:id="@+id/etIPAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="10"
-        android:inputType="textPersonName"
-        android:hint="Enter IP"
-        android:textSize="14sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvIPAdd" />
-    <EditText
-        android:id="@+id/etPort"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:ems="5"
-        android:inputType="textPersonName"
-        android:hint="Port"
-        android:textSize="14sp"
-        app:layout_constraintStart_toEndOf="@id/etIPAdd"
-        app:layout_constraintTop_toBottomOf="@+id/tvIPAdd" />
-
-    <EditText
-        android:id="@+id/etMaxContextLength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-2dp"
-        android:ems="10"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvMaxContextLength"
-        app:layout_constraintTop_toBottomOf="@id/etIPAdd" />
-
-    <EditText
-        android:id="@+id/etMaxLength"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="10"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvMaxLength"
-        app:layout_constraintTop_toBottomOf="@id/etMaxContextLength" />
-    <EditText
-        android:id="@+id/etN"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvN"
-        app:layout_constraintTop_toBottomOf="@id/etMaxLength" />
-    <EditText
-        android:id="@+id/etTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvTemperature"
-        app:layout_constraintTop_toBottomOf="@id/etMaxLength" />
-    <EditText
-        android:id="@+id/etTopP"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvTopP"
-        app:layout_constraintTop_toBottomOf="@id/etN" />
-    <EditText
-        android:id="@+id/etTopK"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvTopK"
-        app:layout_constraintTop_toBottomOf="@id/etTemperature" />
-    <EditText
-        android:id="@+id/etTopA"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvTopA"
-        app:layout_constraintTop_toBottomOf="@id/etTypical" />
-    <EditText
-        android:id="@+id/etTypical"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvTypical"
-        app:layout_constraintTop_toBottomOf="@id/etMaxLength" />
-    <EditText
-        android:id="@+id/etTfs"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvTfs"
-        app:layout_constraintTop_toBottomOf="@id/etRepPen" />
-    <EditText
-        android:id="@+id/etRepPen"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvRepPen"
-        app:layout_constraintTop_toBottomOf="@id/etTopP" />
-    <EditText
-        android:id="@+id/etRepPenRange"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@id/tvRepPenRange"
-        app:layout_constraintTop_toBottomOf="@id/etTopK" />
-    <EditText
-        android:id="@+id/etRepPenSlope"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:ems="5"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@id/tvRepPenSlope"
-        app:layout_constraintTop_toBottomOf="@id/etTopA" />
-
-    <EditText
-        android:id="@+id/etUserIdentifier"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="-11dp"
-        android:layout_marginEnd="10dp"
-        android:ems="10"
-        android:hint="Enter value"
-        android:inputType="textPersonName"
-        android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvUserIdentifier"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etTfs" />
-    <EditText
-         android:id="@+id/etAIIdentifier"
-         android:layout_width="0dp"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="-11dp"
-        android:layout_marginEnd="10dp"
-         android:ems="10"
-         android:hint="Enter value"
-         android:inputType="textPersonName"
-         android:textSize="10sp"
-         app:layout_constraintStart_toEndOf="@+id/tvAIIdentifier"
-        app:layout_constraintEnd_toEndOf="parent"
-         app:layout_constraintTop_toBottomOf="@+id/etUserIdentifier" />
-
-    <EditText
-        android:id="@+id/etSystemPrompt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="Enter value"
-        android:inputType="textMultiLine"
-        android:maxLines="6"
-        android:minLines="4"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSystemPrompt" />
-
-    <EditText
-        android:id="@+id/etContextPrompt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="Enter value"
-        android:inputType="textMultiLine"
-        android:maxLines="6"
-        android:minLines="4"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvContextPrompt" />
-
-    <EditText
-        android:id="@+id/etStopToken"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="Enter value. Separate Stop Tokens with a comma."
-        android:inputType="textMultiLine"
-        android:maxLines="6"
-        android:minLines="4"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvStopToken" />
-
-    <EditText
-        android:id="@+id/etSubstring"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="8dp"
-        android:ems="10"
-        android:hint="Use this field if the text displayed shows the Stop Token. Separate Stop Tokens with a comma."
-        android:inputType="textMultiLine"
-        android:maxLines="6"
-        android:minLines="4"
-        android:textSize="10sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tvSubstring" />
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
     <Button
-        android:id="@+id/btnReset"
+        android:id="@+id/btnOllama"
+        android:layout_width="wrap_content"
+        android:layout_height="400px"
+        android:text="Show Ollama settings"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/btnKobold"
+        />
+
+    <Button
+        android:id="@+id/btnKobold"
+        android:layout_width="wrap_content"
+        android:layout_height="400px"
+        android:text="Show Kobold settings"
+        app:layout_constraintTop_toBottomOf="@id/btnOllama"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <Button
+        android:id="@+id/btnSettingsReset"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="3dp"
         android:text="Reset"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnSave" />
+        app:layout_constraintEnd_toStartOf="@+id/btnSettingsSave" />
     <Button
-        android:id="@+id/btnSave"
+        android:id="@+id/btnSettingsSave"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -509,12 +55,31 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
     <Button
-        android:id="@+id/btnBack"
+        android:id="@+id/btnSettingsBack"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="Back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+<RadioGroup
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toBottomOf="@id/tvChooseServer"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
+    <RadioButton
+        android:id="@+id/rbOllama"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ollama"/>
+
+    <RadioButton
+        android:id="@+id/rbKobold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Koboldcpp"
+     />
+</RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

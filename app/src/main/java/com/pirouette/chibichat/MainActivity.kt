@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity() {
         lateinit var adapter: RvAdapter
         lateinit var ipAdd: String
         lateinit var port: String
+        lateinit var model: String
         var maxContextLength = 0
         var maxLength = 0
         var n = 0
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity() {
         var rep_pen_range = 0
         var rep_pen_slope = 0.0f
         var tfs = 0
+        var ollama = false
+        var kobold = false
         lateinit var systemPrompt: String
         lateinit var contextPrompt: String
         lateinit var stopToken: String
@@ -47,9 +50,11 @@ class MainActivity : AppCompatActivity() {
         lateinit var subString: String
         val stopTokenArray: ArrayList<String> = ArrayList()
         val subStringArray: ArrayList<String> = ArrayList()
+        var rawConv = ArrayList<String>()
         var msgData = ArrayList<Message>()
         var savedStoryData = ArrayList<SavedData>()
-        var convArray = mutableListOf<String>()
+        var koboldConv = mutableListOf<String>()
+        var ollamaConv = ArrayList<OllamaMessage>()
 
 
 
@@ -69,75 +74,169 @@ class MainActivity : AppCompatActivity() {
         btnSend.setOnClickListener()
         {
             LoadData()
+
+            /* Show user message on screen and scroll down*/
             msgData.add(Message("User: " + etPrompt.text.toString(), 0))
             adapter.notifyDataSetChanged()
-            convArray.add(userIdentifier+etPrompt.text.toString()+AIIdentifier)
             recyclerview.scrollToPosition(msgData.size - 1);
-            GetJsonData()
+
+            /* Add the user's prompt to the rawConvArray */
+            rawConv.add("u: "+etPrompt.text.toString())
             etPrompt.setText("")
+
+            /* Choose where to send user's prompt */
+            if(ollama){
+                RawToOllama()
+                OllamaPOST()
+            }else {
+                RawToKobold()
+                KoboldPOST()
+            }
+
         }
         btnDeleteLast.setOnClickListener()
         {
             msgData.removeLastOrNull()
-            convArray.removeLastOrNull()
+            koboldConv.removeLastOrNull()
             adapter.notifyDataSetChanged()
             recyclerview.scrollToPosition(msgData.size - 1);
         }
 
     }
+
     fun LoadData(){
-        val sharedPrefs = getSharedPreferences("saved_settings", Context.MODE_PRIVATE)
-        ipAdd = sharedPrefs.getString("IP_ADDRESS", null).toString()
-        port = sharedPrefs.getString("PORT", null).toString()
-        maxContextLength = sharedPrefs.getInt("MAX_CONTEXT_LENGTH", 0).toInt()
-        maxLength = sharedPrefs.getInt("MAX_LENGTH", 0).toInt()
-        n = sharedPrefs.getInt("N_VALUE", 0).toInt()
-        temp = sharedPrefs.getFloat("TEMPERATURE", 0.7f).toFloat()
-        typical = sharedPrefs.getInt("TYPICAL", 0).toInt()
-        top_p  = sharedPrefs.getFloat("TOP_P", 0.92f).toFloat()
-        top_k = sharedPrefs.getInt("TOP_K", 0).toInt()
-        top_a = sharedPrefs.getInt("TOP_A", 0).toInt()
-        rep_pen = sharedPrefs.getFloat("REP_PEN", 1.1f).toFloat()
-        rep_pen_range = sharedPrefs.getInt("REP_PEN_RANGE", 300).toInt()
-        rep_pen_slope = sharedPrefs.getFloat("REP_PEN_SLOPE", 0.7f).toFloat()
-        tfs = sharedPrefs.getInt("TFS_VALUE", 0).toInt()
-        systemPrompt = sharedPrefs.getString("SYSTEM_PROMPT", null).toString()
-        contextPrompt = sharedPrefs.getString("CONTEXT_PROMPT", null).toString()
-        stopToken = sharedPrefs.getString("STOP_TOKEN", null).toString()
-        userIdentifier = sharedPrefs.getString("USER_IDENTIFIER", null).toString()
-        AIIdentifier = sharedPrefs.getString("AI_IDENTIFIER", null).toString()
-        subString = sharedPrefs.getString("STOP_SUBSTRING", null).toString()
-        stopTokenArray.clear()
-        subStringArray.clear()
-        var tmp = ""
-        stopToken = stopToken + ",";
-        if(subString != "") {
-            subString = subString + ",";
-        }
-        for (charIndex in stopToken.indices) {
-            if (stopToken[charIndex] == ',') {
-                stopTokenArray.add(tmp)
-                tmp = ""
-                continue
+
+        /* The following is to load the default server settings */
+        val sharedServerPrefs = getSharedPreferences("saved_server_settings", Context.MODE_PRIVATE)
+        ollama = sharedServerPrefs.getBoolean("OLLAMA", true)
+        kobold = sharedServerPrefs.getBoolean("KOBOLD", false)
+
+        /* Load settings depending on choice of server */
+        if(ollama){
+            /* The following is to load ollama settings */
+            val sharedOllamaPrefs = getSharedPreferences("saved_ollama_settings", Context.MODE_PRIVATE)
+            ipAdd = sharedOllamaPrefs.getString("IP_ADDRESS", null).toString()
+            port = sharedOllamaPrefs.getString("PORT", null).toString()
+            model = sharedOllamaPrefs.getString("MODEL", null).toString()
+            systemPrompt = sharedOllamaPrefs.getString("SYSTEM_PROMPT", null).toString()
+        } else {
+            /* The following is to load kobold settings */
+            val sharedKoboldPrefs = getSharedPreferences("saved_kobold_settings", Context.MODE_PRIVATE)
+            ipAdd = sharedKoboldPrefs.getString("IP_ADDRESS", null).toString()
+            port = sharedKoboldPrefs.getString("PORT", null).toString()
+            maxContextLength = sharedKoboldPrefs.getInt("MAX_CONTEXT_LENGTH", 0).toInt()
+            maxLength = sharedKoboldPrefs.getInt("MAX_LENGTH", 0).toInt()
+            n = sharedKoboldPrefs.getInt("N_VALUE", 0).toInt()
+            temp = sharedKoboldPrefs.getFloat("TEMPERATURE", 0.7f).toFloat()
+            typical = sharedKoboldPrefs.getInt("TYPICAL", 0).toInt()
+            top_p  = sharedKoboldPrefs.getFloat("TOP_P", 0.92f).toFloat()
+            top_k = sharedKoboldPrefs.getInt("TOP_K", 0).toInt()
+            top_a = sharedKoboldPrefs.getInt("TOP_A", 0).toInt()
+            rep_pen = sharedKoboldPrefs.getFloat("REP_PEN", 1.1f).toFloat()
+            rep_pen_range = sharedKoboldPrefs.getInt("REP_PEN_RANGE", 300).toInt()
+            rep_pen_slope = sharedKoboldPrefs.getFloat("REP_PEN_SLOPE", 0.7f).toFloat()
+            tfs = sharedKoboldPrefs.getInt("TFS_VALUE", 0).toInt()
+            systemPrompt = sharedKoboldPrefs.getString("SYSTEM_PROMPT", null).toString()
+            contextPrompt = sharedKoboldPrefs.getString("CONTEXT_PROMPT", null).toString()
+            stopToken = sharedKoboldPrefs.getString("STOP_TOKEN", null).toString()
+            userIdentifier = sharedKoboldPrefs.getString("USER_IDENTIFIER", null).toString()
+            AIIdentifier = sharedKoboldPrefs.getString("AI_IDENTIFIER", null).toString()
+            subString = sharedKoboldPrefs.getString("STOP_SUBSTRING", null).toString()
+            stopTokenArray.clear()
+            subStringArray.clear()
+            var tmp = ""
+            stopToken = stopToken + ",";
+            if(subString != "") {
+                subString = subString + ",";
             }
-            tmp = tmp + stopToken[charIndex]
-        }
-        for (charIndex in subString.indices) {
-            if (subString[charIndex] == ',') {
-                subStringArray.add(tmp)
-                tmp = ""
-                continue
+            for (charIndex in stopToken.indices) {
+                if (stopToken[charIndex] == ',') {
+                    stopTokenArray.add(tmp)
+                    tmp = ""
+                    continue
+                }
+                tmp = tmp + stopToken[charIndex]
             }
-            tmp = tmp + subString[charIndex]
+            for (charIndex in subString.indices) {
+                if (subString[charIndex] == ',') {
+                    subStringArray.add(tmp)
+                    tmp = ""
+                    continue
+                }
+                tmp = tmp + subString[charIndex]
+            }
+
         }
+    }
+
+    /* koboldConv and ollamaConve have to be reconstructed every send as the user may have switched
+    servers in-between prompts */
+    fun RawToKobold(){
+        koboldConv.clear()
+        for(index in rawConv.indices){
+            if(rawConv[index].substring(0,3) == "u: "){
+                koboldConv.add(userIdentifier+rawConv[index].substring(3)+AIIdentifier)
+            }else{
+                koboldConv.add(rawConv[index].substring(4))
+            }
+        }
+    }
+    fun RawToOllama(){
+        ollamaConv.clear()
+        val ollamaSystemPrompt = OllamaMessage("system", systemPrompt)
+        for(index in rawConv.indices){
+            ollamaConv.add(ollamaSystemPrompt)
+            if(rawConv[index].substring(0,3) == "u: "){
+                ollamaConv.add(OllamaMessage("user", rawConv[index].substring(3)))
+            }else{
+                ollamaConv.add(OllamaMessage("assistant", rawConv[index].substring(4)))
+            }
+        }
+    }
+
+    fun OllamaPOST(){
+        val volleyQueue = Volley.newRequestQueue(this)
+        val url = "http://"+ipAdd+":"+port+"/api/chat"
+        val data = OllamaJsonClass(
+            model = model,
+            messages = ollamaConv,
+            stream = false)
+        val gson = Gson()
+        val jsonRaw = gson.toJson(data)
+        val jsonObj = JSONObject(jsonRaw)
+        var result = ""
+        val jsonObjectRequest = JsonObjectRequest(Request.Method.POST, url, jsonObj,
+            { response ->
+                val jsonObject = response.getJSONObject("message")
+                val jsonContent = jsonObject.getString("content")
+                result = jsonContent
+                rawConv.add("ai: "+ result)
+                AddMessage(result)
+            },
+            { error ->
+                msgData.add(Message("System: " + error.toString(), 2))
+                adapter.notifyDataSetChanged()
+                recyclerview.scrollToPosition(msgData.size - 1);
+                // tvCheck.setTextColor(Color.parseColor("#FFFFFFFF"))
+                // tvCheck.text = error.toString()
+            }
+        )
+        jsonObjectRequest.setRetryPolicy(
+            DefaultRetryPolicy(
+                10000000,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
+            )
+        )
+        volleyQueue.add(jsonObjectRequest);
 
     }
 
-     fun GetJsonData(){
+    fun KoboldPOST(){
         val volleyQueue = Volley.newRequestQueue(this)
         val url = "http://"+ipAdd+":"+port+"/api/v1/generate"
         val initialPrompt = systemPrompt+contextPrompt
-        val data = JsonClass(
+        val data = KoboldJsonClass(
             maxContextLength = maxContextLength,
             maxLength = maxLength,
             n = n,
@@ -150,7 +249,7 @@ class MainActivity : AppCompatActivity() {
             repPenRange = rep_pen_range,
             repPenSlope = rep_pen_slope,
             tfs = tfs,
-            prompt = initialPrompt + convArray.joinToString(separator = ""),
+            prompt = initialPrompt + koboldConv.joinToString(separator = ""),
             stopSequence = stopTokenArray)
         val gson = Gson()
         val jsonRaw = gson.toJson(data)
@@ -167,7 +266,7 @@ class MainActivity : AppCompatActivity() {
                         result = result.substringBefore(item)
                     }
                 }
-                convArray.add(result)
+                rawConv.add("ai: "+ result)
                 AddMessage(result)
             },
             { error ->
@@ -188,16 +287,18 @@ class MainActivity : AppCompatActivity() {
         volleyQueue.add(jsonObjectRequest);
     }
 
+
     fun AddMessage (message: String)
     {
         if (message.first() == ' ') {
-            msgData.add(Message("Kobold:" + message, 1))
+            msgData.add(Message("Assistant:" + message, 1))
         }else {
-            msgData.add(Message("Kobold: " + message, 1))
+            msgData.add(Message("Assistant: " + message, 1))
         }
         adapter.notifyDataSetChanged()
         recyclerview.scrollToPosition(msgData.size - 1);
     }
+
     fun CreateFolder(){
         val folder = File(Environment.getExternalStorageDirectory(), "ChibiChat")
         if(!folder.exists()) {
@@ -205,6 +306,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.options_menu, menu)
         return super.onCreateOptionsMenu(menu)
@@ -228,7 +330,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.opClear ->{
                 msgData.clear()
-                convArray.clear()
+                rawConv.clear()
                 adapter.notifyDataSetChanged()
                 true
             }
@@ -239,6 +341,7 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
+
     fun ShowLoadPopUp(){
         val inflater = LayoutInflater.from(this)
         val popupView: View = inflater.inflate(R.layout.activity_load, null)
@@ -251,6 +354,7 @@ class MainActivity : AppCompatActivity() {
             ViewGroup.LayoutParams.WRAP_CONTENT,
             true
         )
+        savedStoryData = loadArrayFromFile(this)
         popupWindow.showAtLocation(popupView, Gravity.CENTER, 0, 0)
         //val savedDataFile = loadArrayFromFile(this)
         container.layoutManager = LinearLayoutManager(this)
@@ -270,9 +374,9 @@ class MainActivity : AppCompatActivity() {
             val position = popupAdapter.selectedPosition
             if (position != RecyclerView.NO_POSITION) {
                 msgData.clear()
-                msgData.addAll(savedStoryData[position].savedDataArray)
-                convArray.clear()
-                convArray.addAll(savedStoryData[position].promptListSaved)
+                msgData.addAll(savedStoryData[position].onscreenMessage)
+                rawConv.clear()
+                rawConv = savedStoryData[position].savedDataArray
                 adapter.notifyDataSetChanged()
                 Toast.makeText(applicationContext, savedStoryData[position].name + " Loaded!", Toast.LENGTH_SHORT).show()
 
@@ -280,6 +384,7 @@ class MainActivity : AppCompatActivity() {
         }
    
     }
+
     fun ShowSavePopUp(){
         val inflater = LayoutInflater.from(this)
         val popupSaveView: View = inflater.inflate(R.layout.activity_save, null)
@@ -294,15 +399,14 @@ class MainActivity : AppCompatActivity() {
         popupWindow.showAtLocation(popupSaveView, Gravity.CENTER, 0, 0)
 
         btnSaveName.setOnClickListener(){
-            val currentMsgData = ArrayList(msgData)
-            val currentConversation = convArray.toMutableList()
-            val savedDataObject = SavedData(etSaveName.text.toString(), currentMsgData, currentConversation)
+            val savedDataObject = SavedData(etSaveName.text.toString(), rawConv, msgData)
             savedStoryData.add(savedDataObject)
             saveArrayToFile(this, savedStoryData)
             Toast.makeText(applicationContext, etSaveName.text.toString() + " Saved!", Toast.LENGTH_SHORT).show()
         }
 
     }
+
     fun saveArrayToFile(context: Context, array: ArrayList<SavedData>) {
         val fileName = "array_data"
 
@@ -316,6 +420,7 @@ class MainActivity : AppCompatActivity() {
             msgData.add(Message("System: " + e.toString(), 2))
         }
     }
+
     fun loadArrayFromFile(context: Context): ArrayList<SavedData> {
         val fileName = "array_data"
         return try {

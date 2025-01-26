@@ -26,6 +26,12 @@
             android:exported="false" />
         <activity
             android:name=".SettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OllamaActivity"
+            android:exported="false" />
+        <activity
+            android:name=".KoboldActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
