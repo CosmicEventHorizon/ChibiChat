@@ -184,8 +184,8 @@ class MainActivity : AppCompatActivity() {
     fun RawToOllama(){
         ollamaConv.clear()
         val ollamaSystemPrompt = OllamaMessage("system", systemPrompt)
+        ollamaConv.add(ollamaSystemPrompt)
         for(index in rawConv.indices){
-            ollamaConv.add(ollamaSystemPrompt)
             if(rawConv[index].substring(0,3) == "u: "){
                 ollamaConv.add(OllamaMessage("user", rawConv[index].substring(3)))
             }else{
