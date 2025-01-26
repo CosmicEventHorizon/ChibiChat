@@ -6,13 +6,17 @@ ChibiChat is an Android app deisgned to communicate with Ollama or Koboldcpp API
 
 ## Getting Started
 The app communicates with Ollama or Koboldcpp API endpoints which can be hosted locally or remotely on a phone or on a computer device.
+
 For running Koboldcpp on your computer device follow the instructions on LostRuin's [github](https://github.com/LostRuins/koboldcpp).
+
 Alternatively, koboldcpp can be built on termux on the android device. A script is hosted on this repo to automate the process (See below). 
+
 For running Ollama on your computer device follow the instructions on Ollama's [github](https://github.com/ollama/ollama).
-**Please note that you need to expose your Ollama server to your network to be capable of accessing it remotely as outline in their [FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server)**
+
+**Please note that you need to expose your Ollama server to your network to be capable of accessing it remotely as outline in their [FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server).**
 
 
-### Usage for koboldcpp
+### Usage for Ollama
 1. Download and install the latest apk uploaded in the [releases](https://github.com/Blood-Pirouette/ChibiChat/releases) section
 2. Start the server on your computer or android device and note the IP Address along with the port.
 3. Open ChibiChat on your device, go to settings, and choose ollama's radio button then press save.
