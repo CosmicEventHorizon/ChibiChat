@@ -1,15 +1,26 @@
 # ChibiChat
-ChibiChat is an Android app deisgned to communicate with koboldcpp API endpoint, licensed under [GNU General Public License version 3](https://github.com/Blood-Pirouette/ChibiChat/blob/main/LICENSE)
+ChibiChat is an Android app deisgned to communicate with Ollama and Koboldcpp API endpoint, licensed under [GNU General Public License version 3](https://github.com/CosmicEventHorizon/ChibiChat/blob/main/LICENSE)
 
 <img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/miku.png" width="100" height="100">
 <img src="https://github.com/Blood-Pirouette/ChibiChat/blob/main/images/screenshot.jpg" width="400" height="900">
 
 ## Getting Started
-The app communicates with Koboldcpp API endpoints which can be hosted locally or remotely on a phone or on a computer device.
+The app communicates with Ollama or Koboldcpp API endpoints which can be hosted locally or remotely on a phone or on a computer device.
 For running Koboldcpp on your computer device follow the instructions on LostRuin's [github](https://github.com/LostRuins/koboldcpp).
 Alternatively, koboldcpp can be built on termux on the android device. A script is hosted on this repo to automate the process (See below). 
+For running Ollama on your computer device follow the instructions on Ollama's [github](https://github.com/ollama/ollama).
+**Please note that you need to expose your Ollama server to your network to be capable of accessing it remotely as outline in their [FAQ](https://github.com/ollama/ollama/blob/main/docs/faq.md#how-do-i-configure-ollama-server)**
 
-### Usage
+
+### Usage for koboldcpp
+1. Download and install the latest apk uploaded in the [releases](https://github.com/Blood-Pirouette/ChibiChat/releases) section
+2. Start the server on your computer or android device and note the IP Address along with the port.
+3. Open ChibiChat on your device, go to settings, and choose ollama's radio button then press save.
+4. After that go to Ollama settings in chibichat, and type the IP address under the "IP Address of the server" heading (example: 192.168.1.100) and the port number in the port field (example: 11434).
+5. Finally, add the model that is installed on your serverside under the "Model" field then press save. The app is now ready to communicate with the Ollama server.
+
+
+### Usage for Koboldcpp
 1. Download and install the latest apk uploaded in the [releases](https://github.com/Blood-Pirouette/ChibiChat/releases) section
 2. Start the model on your computer or android device and note the IP Address along with the port.
 3. Open ChibiChat on your device, go to settings and type the IP address under the "IP Address of the server" heading (example: 192.168.1.100) and the port number in the port field (example: 5001) then press "Save".
@@ -34,7 +45,6 @@ In the settings page, numerous options are listed to control what gets sent to t
 - The app is only instruct mode currently, newer modes will be added eventually
 - Save and Load Story options 
 - Import/Export settings
-- Support for more language models
 - More functionalities such as copy-paste the text
 - UI improvements
 - etc. etc.
