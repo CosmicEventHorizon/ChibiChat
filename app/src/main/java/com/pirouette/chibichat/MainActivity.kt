@@ -19,43 +19,42 @@ import java.io.*
 
 
 class MainActivity : AppCompatActivity() {
-        //lateinit var tvCheck: TextView
-        lateinit var btnSend: Button
-        lateinit var btnDeleteLast: Button
-        lateinit var recyclerview: RecyclerView
-        lateinit var etPrompt: EditText
-        lateinit var adapter: RvAdapter
-        lateinit var ipAdd: String
-        lateinit var port: String
-        lateinit var model: String
-        var maxContextLength = 0
-        var maxLength = 0
-        var n = 0
-        var temp = 0.0f
-        var typical = 0
-        var top_p = 0.0f
-        var top_k = 0
-        var top_a = 0
-        var rep_pen = 0.0f
-        var rep_pen_range = 0
-        var rep_pen_slope = 0.0f
-        var tfs = 0
-        var ollama = false
-        var kobold = false
-        lateinit var systemPrompt: String
-        lateinit var contextPrompt: String
-        lateinit var stopToken: String
-        lateinit var userIdentifier: String
-        lateinit var AIIdentifier: String
-        lateinit var subString: String
-        val stopTokenArray: ArrayList<String> = ArrayList()
-        val subStringArray: ArrayList<String> = ArrayList()
-        var rawConv = ArrayList<String>()
-        var msgData = ArrayList<Message>()
-        var savedStoryData = ArrayList<SavedData>()
-        var koboldConv = mutableListOf<String>()
-        var ollamaConv = ArrayList<OllamaMessage>()
-
+    //lateinit var tvCheck: TextView
+    lateinit var btnSend: Button
+    lateinit var btnDeleteLast: Button
+    lateinit var recyclerview: RecyclerView
+    lateinit var etPrompt: EditText
+    lateinit var adapter: RvAdapter
+    lateinit var ipAdd: String
+    lateinit var port: String
+    lateinit var model: String
+    var maxContextLength = 0
+    var maxLength = 0
+    var n = 0
+    var temp = 0.0f
+    var typical = 0
+    var top_p = 0.0f
+    var top_k = 0
+    var top_a = 0
+    var rep_pen = 0.0f
+    var rep_pen_range = 0
+    var rep_pen_slope = 0.0f
+    var tfs = 0
+    var ollama = false
+    var kobold = false
+    lateinit var systemPrompt: String
+    lateinit var contextPrompt: String
+    lateinit var stopToken: String
+    lateinit var userIdentifier: String
+    lateinit var AIIdentifier: String
+    lateinit var subString: String
+    val stopTokenArray: ArrayList<String> = ArrayList()
+    val subStringArray: ArrayList<String> = ArrayList()
+    var rawConv = ArrayList<String>()
+    var msgData = ArrayList<Message>()
+    var savedStoryData = ArrayList<SavedData>()
+    var koboldConv = mutableListOf<String>()
+    var ollamaConv = ArrayList<OllamaMessage>()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +72,12 @@ class MainActivity : AppCompatActivity() {
         savedStoryData = loadArrayFromFile(this)
         btnSend.setOnClickListener()
         {
+            /* Clear the previous error before proceeding */
+            if (msgData.isNotEmpty() && (msgData[msgData.size - 1]).msgContent == "System: ") {
+                ClearError()
+            }
+
+            /*Load current user settings*/
             LoadData()
 
             /* Show user message on screen and scroll down*/
@@ -81,30 +86,50 @@ class MainActivity : AppCompatActivity() {
             recyclerview.scrollToPosition(msgData.size - 1);
 
             /* Add the user's prompt to the rawConvArray */
-            rawConv.add("u: "+etPrompt.text.toString())
+            rawConv.add("u: " + etPrompt.text.toString())
             etPrompt.setText("")
 
             /* Choose where to send user's prompt */
-            if(ollama){
+            if (ollama) {
                 RawToOllama()
                 OllamaPOST()
-            }else {
+            } else {
                 RawToKobold()
                 KoboldPOST()
             }
-
         }
         btnDeleteLast.setOnClickListener()
         {
-            msgData.removeLastOrNull()
-            koboldConv.removeLastOrNull()
+            /* If the previous message was a system message remove that along with the unsent user message, otherwise remove
+            * the assistant message and the corresponding user message
+            * */
+            if (msgData.isNotEmpty() && (msgData[msgData.size - 1]).msgContent == "System: ") {
+                ClearError()
+            } else {
+                DeleteLastMessage()
+            }
             adapter.notifyDataSetChanged()
             recyclerview.scrollToPosition(msgData.size - 1);
         }
 
     }
 
-    fun LoadData(){
+    /*function to delete system messages*/
+    fun ClearError(){
+            msgData.removeLastOrNull() /*Remove the system message*/
+            msgData.removeLastOrNull() /*Remove the user message */
+            rawConv.removeLastOrNull() /*Remove the user message from rawConv*/
+    }
+
+    /* function to delete last message*/
+    fun DeleteLastMessage(){
+        msgData.removeLastOrNull() /*Remove the previous assistant message*/
+        msgData.removeLastOrNull() /*Remove the previous user message*/
+        rawConv.removeLastOrNull() /*Remove the previous assistant message from rawConv*/
+        rawConv.removeLastOrNull() /*Remove the previous user message from rawConv*/
+    }
+
+    fun LoadData() {
 
         /* The following is to load the default server settings */
         val sharedServerPrefs = getSharedPreferences("saved_server_settings", Context.MODE_PRIVATE)
@@ -112,16 +137,18 @@ class MainActivity : AppCompatActivity() {
         kobold = sharedServerPrefs.getBoolean("KOBOLD", false)
 
         /* Load settings depending on choice of server */
-        if(ollama){
+        if (ollama) {
             /* The following is to load ollama settings */
-            val sharedOllamaPrefs = getSharedPreferences("saved_ollama_settings", Context.MODE_PRIVATE)
+            val sharedOllamaPrefs =
+                getSharedPreferences("saved_ollama_settings", Context.MODE_PRIVATE)
             ipAdd = sharedOllamaPrefs.getString("IP_ADDRESS", null).toString()
             port = sharedOllamaPrefs.getString("PORT", null).toString()
             model = sharedOllamaPrefs.getString("MODEL", null).toString()
             systemPrompt = sharedOllamaPrefs.getString("SYSTEM_PROMPT", null).toString()
         } else {
             /* The following is to load kobold settings */
-            val sharedKoboldPrefs = getSharedPreferences("saved_kobold_settings", Context.MODE_PRIVATE)
+            val sharedKoboldPrefs =
+                getSharedPreferences("saved_kobold_settings", Context.MODE_PRIVATE)
             ipAdd = sharedKoboldPrefs.getString("IP_ADDRESS", null).toString()
             port = sharedKoboldPrefs.getString("PORT", null).toString()
             maxContextLength = sharedKoboldPrefs.getInt("MAX_CONTEXT_LENGTH", 0).toInt()
@@ -129,7 +156,7 @@ class MainActivity : AppCompatActivity() {
             n = sharedKoboldPrefs.getInt("N_VALUE", 0).toInt()
             temp = sharedKoboldPrefs.getFloat("TEMPERATURE", 0.7f).toFloat()
             typical = sharedKoboldPrefs.getInt("TYPICAL", 0).toInt()
-            top_p  = sharedKoboldPrefs.getFloat("TOP_P", 0.92f).toFloat()
+            top_p = sharedKoboldPrefs.getFloat("TOP_P", 0.92f).toFloat()
             top_k = sharedKoboldPrefs.getInt("TOP_K", 0).toInt()
             top_a = sharedKoboldPrefs.getInt("TOP_A", 0).toInt()
             rep_pen = sharedKoboldPrefs.getFloat("REP_PEN", 1.1f).toFloat()
@@ -146,7 +173,7 @@ class MainActivity : AppCompatActivity() {
             subStringArray.clear()
             var tmp = ""
             stopToken = stopToken + ",";
-            if(subString != "") {
+            if (subString != "") {
                 subString = subString + ",";
             }
             for (charIndex in stopToken.indices) {
@@ -171,36 +198,38 @@ class MainActivity : AppCompatActivity() {
 
     /* koboldConv and ollamaConve have to be reconstructed every send as the user may have switched
     servers in-between prompts */
-    fun RawToKobold(){
+    fun RawToKobold() {
         koboldConv.clear()
-        for(index in rawConv.indices){
-            if(rawConv[index].substring(0,3) == "u: "){
-                koboldConv.add(userIdentifier+rawConv[index].substring(3)+AIIdentifier)
-            }else{
+        for (index in rawConv.indices) {
+            if (rawConv[index].substring(0, 3) == "u: ") {
+                koboldConv.add(userIdentifier + rawConv[index].substring(3) + AIIdentifier)
+            } else {
                 koboldConv.add(rawConv[index].substring(4))
             }
         }
     }
-    fun RawToOllama(){
+
+    fun RawToOllama() {
         ollamaConv.clear()
         val ollamaSystemPrompt = OllamaMessage("system", systemPrompt)
         ollamaConv.add(ollamaSystemPrompt)
-        for(index in rawConv.indices){
-            if(rawConv[index].substring(0,3) == "u: "){
+        for (index in rawConv.indices) {
+            if (rawConv[index].substring(0, 3) == "u: ") {
                 ollamaConv.add(OllamaMessage("user", rawConv[index].substring(3)))
-            }else{
+            } else {
                 ollamaConv.add(OllamaMessage("assistant", rawConv[index].substring(4)))
             }
         }
     }
 
-    fun OllamaPOST(){
+    fun OllamaPOST() {
         val volleyQueue = Volley.newRequestQueue(this)
-        val url = "http://"+ipAdd+":"+port+"/api/chat"
+        val url = "http://" + ipAdd + ":" + port + "/api/chat"
         val data = OllamaJsonClass(
             model = model,
             messages = ollamaConv,
-            stream = false)
+            stream = false
+        )
         val gson = Gson()
         val jsonRaw = gson.toJson(data)
         val jsonObj = JSONObject(jsonRaw)
@@ -210,7 +239,7 @@ class MainActivity : AppCompatActivity() {
                 val jsonObject = response.getJSONObject("message")
                 val jsonContent = jsonObject.getString("content")
                 result = jsonContent
-                rawConv.add("ai: "+ result)
+                rawConv.add("ai: " + result)
                 AddMessage(result)
             },
             { error ->
@@ -232,10 +261,10 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun KoboldPOST(){
+    fun KoboldPOST() {
         val volleyQueue = Volley.newRequestQueue(this)
-        val url = "http://"+ipAdd+":"+port+"/api/v1/generate"
-        val initialPrompt = systemPrompt+contextPrompt
+        val url = "http://" + ipAdd + ":" + port + "/api/v1/generate"
+        val initialPrompt = systemPrompt + contextPrompt
         val data = KoboldJsonClass(
             maxContextLength = maxContextLength,
             maxLength = maxLength,
@@ -250,7 +279,8 @@ class MainActivity : AppCompatActivity() {
             repPenSlope = rep_pen_slope,
             tfs = tfs,
             prompt = initialPrompt + koboldConv.joinToString(separator = ""),
-            stopSequence = stopTokenArray)
+            stopSequence = stopTokenArray
+        )
         val gson = Gson()
         val jsonRaw = gson.toJson(data)
         val jsonObj = JSONObject(jsonRaw)
@@ -261,20 +291,20 @@ class MainActivity : AppCompatActivity() {
                 val jsonIndex = jsonResult.getJSONObject(0)
                 val jsonText = jsonIndex.get("text")
                 result = jsonText.toString()
-                if (subStringArray.isNotEmpty() && subStringArray.size>0) {
+                if (subStringArray.isNotEmpty() && subStringArray.size > 0) {
                     for (item in subStringArray) {
                         result = result.substringBefore(item)
                     }
                 }
-                rawConv.add("ai: "+ result)
+                rawConv.add("ai: " + result)
                 AddMessage(result)
             },
             { error ->
                 msgData.add(Message("System: " + error.toString(), 2))
                 adapter.notifyDataSetChanged()
                 recyclerview.scrollToPosition(msgData.size - 1);
-               // tvCheck.setTextColor(Color.parseColor("#FFFFFFFF"))
-               // tvCheck.text = error.toString()
+                // tvCheck.setTextColor(Color.parseColor("#FFFFFFFF"))
+                // tvCheck.text = error.toString()
             }
         )
         jsonObjectRequest.setRetryPolicy(
@@ -288,21 +318,20 @@ class MainActivity : AppCompatActivity() {
     }
 
 
-    fun AddMessage (message: String)
-    {
+    fun AddMessage(message: String) {
         if (message.first() == ' ') {
             msgData.add(Message("Assistant:" + message, 1))
-        }else {
+        } else {
             msgData.add(Message("Assistant: " + message, 1))
         }
         adapter.notifyDataSetChanged()
         recyclerview.scrollToPosition(msgData.size - 1);
     }
 
-    fun CreateFolder(){
+    fun CreateFolder() {
         val folder = File(Environment.getExternalStorageDirectory(), "ChibiChat")
-        if(!folder.exists()) {
-        folder.mkdir()
+        if (!folder.exists()) {
+            folder.mkdir()
         }
 
     }
@@ -319,30 +348,35 @@ class MainActivity : AppCompatActivity() {
                 startActivity(settingsPage);
                 true
             }
-            R.id.opServer ->{
+
+            R.id.opServer -> {
                 val serverPage = Intent(this, ServerActivity::class.java);
                 startActivity(serverPage);
                 true
             }
-            R.id.opSave ->{
+
+            R.id.opSave -> {
                 ShowSavePopUp()
                 true
             }
-            R.id.opClear ->{
+
+            R.id.opClear -> {
                 msgData.clear()
                 rawConv.clear()
                 adapter.notifyDataSetChanged()
                 true
             }
-            R.id.opLoad ->{
+
+            R.id.opLoad -> {
                 ShowLoadPopUp()
                 true
             }
+
             else -> super.onOptionsItemSelected(item)
         }
     }
 
-    fun ShowLoadPopUp(){
+    fun ShowLoadPopUp() {
         val inflater = LayoutInflater.from(this)
         val popupView: View = inflater.inflate(R.layout.activity_load, null)
         val container: RecyclerView = popupView.findViewById<RecyclerView>(R.id.rvLoads)
@@ -361,7 +395,7 @@ class MainActivity : AppCompatActivity() {
         val popupAdapter = RvLoadAdapter(savedStoryData)
         container.adapter = popupAdapter
 
-        btnDeleteStory.setOnClickListener(){
+        btnDeleteStory.setOnClickListener() {
             val position = popupAdapter.selectedPosition
             if (position != RecyclerView.NO_POSITION) {
                 savedStoryData.removeAt(position)
@@ -370,7 +404,7 @@ class MainActivity : AppCompatActivity() {
                 popupAdapter.notifyDataSetChanged()
             }
         }
-        btnLoadStory.setOnClickListener(){
+        btnLoadStory.setOnClickListener() {
             val position = popupAdapter.selectedPosition
             if (position != RecyclerView.NO_POSITION) {
                 msgData.clear()
@@ -378,14 +412,18 @@ class MainActivity : AppCompatActivity() {
                 rawConv.clear()
                 rawConv = savedStoryData[position].savedDataArray
                 adapter.notifyDataSetChanged()
-                Toast.makeText(applicationContext, savedStoryData[position].name + " Loaded!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    applicationContext,
+                    savedStoryData[position].name + " Loaded!",
+                    Toast.LENGTH_SHORT
+                ).show()
 
             }
         }
-   
+
     }
 
-    fun ShowSavePopUp(){
+    fun ShowSavePopUp() {
         val inflater = LayoutInflater.from(this)
         val popupSaveView: View = inflater.inflate(R.layout.activity_save, null)
         val btnSaveName: Button = popupSaveView.findViewById<Button>(R.id.btnSaveName)
@@ -398,11 +436,15 @@ class MainActivity : AppCompatActivity() {
         )
         popupWindow.showAtLocation(popupSaveView, Gravity.CENTER, 0, 0)
 
-        btnSaveName.setOnClickListener(){
+        btnSaveName.setOnClickListener() {
             val savedDataObject = SavedData(etSaveName.text.toString(), rawConv, msgData)
             savedStoryData.add(savedDataObject)
             saveArrayToFile(this, savedStoryData)
-            Toast.makeText(applicationContext, etSaveName.text.toString() + " Saved!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                applicationContext,
+                etSaveName.text.toString() + " Saved!",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     }

@@ -11,6 +11,16 @@
         app:layout_constraintBottom_toTopOf="@+id/etPrompt"
         app:layout_constraintEnd_toEndOf="parent" />-->
 
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/wrapper"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
     <Button
         android:id="@+id/btnDeleteLast"
         android:layout_width="wrap_content"
@@ -18,9 +28,10 @@
         android:layout_marginStart="2dp"
         android:layout_marginEnd="2dp"
         android:text="Back"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/etPrompt"
-        app:layout_constraintEnd_toStartOf="@id/btnSendText" />
+        app:layout_constraintBottom_toTopOf="@id/btnSendText"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
     <Button
         android:id="@+id/btnSendText"
         android:layout_width="wrap_content"
@@ -29,8 +40,9 @@
         android:layout_marginEnd="2dp"
         android:text="Send"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/btnDeleteLast"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
     <EditText
         android:id="@+id/etPrompt"
         android:layout_width="0dp"
@@ -38,11 +50,16 @@
         style="@style/CustomEditTextStyle"
         android:hint="Enter prompt"
         android:textColorHint="@color/purple_200"
-        android:inputType="textPersonName"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:scrollHorizontally="false"
         android:textColor="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnDeleteLast"
         app:layout_constraintStart_toStartOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMessages"
@@ -51,11 +68,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/etPrompt"
+        app:layout_constraintBottom_toTopOf="@+id/wrapper"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
