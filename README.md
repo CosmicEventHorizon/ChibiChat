@@ -71,7 +71,6 @@ In Koboldcpp settings:
 ## To-Do 🔄
 
 - Add support for other AI endpoints such as llama.cpp
-- Improve UI and add more functionalities like copy-paste text.
 - Implement support for streaming API for text generation
 - Implement import/export settings functionality.
 - General improvements and bug fixes.
