@@ -16,6 +16,7 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import org.json.JSONObject
 import java.io.*
+import java.net.URI
 
 
 class MainActivity : AppCompatActivity() {
@@ -224,7 +225,7 @@ class MainActivity : AppCompatActivity() {
 
     fun OllamaPOST() {
         val volleyQueue = Volley.newRequestQueue(this)
-        val url = "http://" + ipAdd + ":" + port + "/api/chat"
+        val url = buildChatUrl(ipAdd, port)
         val data = OllamaJsonClass(
             model = model,
             messages = ollamaConv,
@@ -259,6 +260,32 @@ class MainActivity : AppCompatActivity() {
         )
         volleyQueue.add(jsonObjectRequest);
 
+    }
+
+    fun buildChatUrl(ipAdd: String, port: String?): String {
+        val base = if (ipAdd.startsWith("http://") || ipAdd.startsWith("https://")) {
+            ipAdd
+        } else {
+            "http://$ipAdd"
+        }
+
+        val uri = try {
+            URI(base)
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Invalid server address")
+        }
+
+        val portInt = port?.toIntOrNull() ?: uri.port
+
+        return URI(
+            uri.scheme,
+            null,
+            uri.host,
+            portInt,
+            "/api/chat",
+            null,
+            null
+        ).toString()
     }
 
     fun KoboldPOST() {
