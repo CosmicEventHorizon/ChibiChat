@@ -2,6 +2,7 @@ package com.pirouette.chibichat
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Environment
 import android.view.*
@@ -16,13 +17,21 @@ import com.android.volley.toolbox.Volley
 import com.google.gson.Gson
 import org.json.JSONObject
 import java.io.*
+import java.net.HttpURLConnection
 import java.net.URI
+import java.net.URL
 
 
 class MainActivity : AppCompatActivity() {
+    companion object {
+        private const val STATE_RAW_CONV = "state_raw_conv"
+        private const val STATE_MSG_DATA = "state_msg_data"
+    }
+
     //lateinit var tvCheck: TextView
     lateinit var btnSend: Button
     lateinit var btnDeleteLast: Button
+    lateinit var btnSystemPrompt: Button
     lateinit var recyclerview: RecyclerView
     lateinit var etPrompt: EditText
     lateinit var adapter: RvAdapter
@@ -44,6 +53,7 @@ class MainActivity : AppCompatActivity() {
     var ollama = false
     var kobold = false
     lateinit var systemPrompt: String
+    lateinit var systemPromptName: String
     lateinit var contextPrompt: String
     lateinit var stopToken: String
     lateinit var userIdentifier: String
@@ -56,6 +66,7 @@ class MainActivity : AppCompatActivity() {
     var savedStoryData = ArrayList<SavedData>()
     var koboldConv = mutableListOf<String>()
     var ollamaConv = ArrayList<OllamaMessage>()
+    var systemPromptPopup: PopupWindow? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -64,13 +75,19 @@ class MainActivity : AppCompatActivity() {
         CreateFolder()
         btnSend = findViewById(R.id.btnSendText)
         btnDeleteLast = findViewById(R.id.btnDeleteLast)
+        btnSystemPrompt = findViewById(R.id.btnSystemPrompt)
         etPrompt = findViewById(R.id.etPrompt)
         //tvCheck = findViewById(R.id.tvOutput)
         recyclerview = findViewById<RecyclerView>(R.id.rvMessages)
-        recyclerview.layoutManager = LinearLayoutManager(this)
+        recyclerview.layoutManager = LinearLayoutManager(this).apply {
+            stackFromEnd = true
+        }
         adapter = RvAdapter(msgData)
         recyclerview.adapter = adapter
+        RestoreConversationState(savedInstanceState)
         savedStoryData = loadArrayFromFile(this)
+        LoadData()
+        UpdateSystemPromptButton()
         btnSend.setOnClickListener()
         {
             /* Clear the previous error before proceeding */
@@ -112,7 +129,26 @@ class MainActivity : AppCompatActivity() {
             adapter.notifyDataSetChanged()
             recyclerview.scrollToPosition(msgData.size - 1);
         }
+        btnSystemPrompt.setOnClickListener {
+            if (systemPromptPopup?.isShowing == true) {
+                systemPromptPopup?.dismiss()
+            } else {
+                ShowSystemPromptPopup()
+            }
+        }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        LoadData()
+        UpdateSystemPromptButton()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putStringArrayList(STATE_RAW_CONV, rawConv)
+        outState.putSerializable(STATE_MSG_DATA, ArrayList(msgData))
     }
 
     /*function to delete system messages*/
@@ -130,6 +166,23 @@ class MainActivity : AppCompatActivity() {
         rawConv.removeLastOrNull() /*Remove the previous user message from rawConv*/
     }
 
+    fun RestoreConversationState(savedInstanceState: Bundle?) {
+        if (savedInstanceState == null) {
+            return
+        }
+
+        rawConv.clear()
+        rawConv.addAll(savedInstanceState.getStringArrayList(STATE_RAW_CONV) ?: arrayListOf())
+
+        @Suppress("UNCHECKED_CAST")
+        val restoredMessages =
+            savedInstanceState.getSerializable(STATE_MSG_DATA) as? ArrayList<Message> ?: arrayListOf()
+        msgData.clear()
+        msgData.addAll(restoredMessages)
+        adapter.notifyDataSetChanged()
+        ScrollToBottom()
+    }
+
     fun LoadData() {
 
         /* The following is to load the default server settings */
@@ -145,7 +198,8 @@ class MainActivity : AppCompatActivity() {
             ipAdd = sharedOllamaPrefs.getString("IP_ADDRESS", null).toString()
             port = sharedOllamaPrefs.getString("PORT", null).toString()
             model = sharedOllamaPrefs.getString("MODEL", null).toString()
-            systemPrompt = sharedOllamaPrefs.getString("SYSTEM_PROMPT", null).toString()
+            systemPromptName = sharedOllamaPrefs.getString("SYSTEM_PROMPT_NAME", "").orEmpty()
+            systemPrompt = sharedOllamaPrefs.getString("SYSTEM_PROMPT", "").orEmpty()
         } else {
             /* The following is to load kobold settings */
             val sharedKoboldPrefs =
@@ -197,6 +251,77 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    fun UpdateSystemPromptButton() {
+        if (ollama) {
+            btnSystemPrompt.visibility = View.VISIBLE
+            btnSystemPrompt.text = if (systemPromptName.isNotEmpty()) {
+                systemPromptName
+            } else {
+                OllamaPromptStore.buildPromptLabel(systemPrompt)
+            }
+        } else {
+            btnSystemPrompt.visibility = View.GONE
+            systemPromptPopup?.dismiss()
+        }
+    }
+
+    fun ShowSystemPromptPopup() {
+        val sharedPrefs = getSharedPreferences("saved_ollama_settings", Context.MODE_PRIVATE)
+        val promptList = OllamaPromptStore.loadPrompts(sharedPrefs)
+
+        if (promptList.isEmpty()) {
+            Toast.makeText(applicationContext, "No saved system prompts", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val promptLabels = promptList.map { it.name }
+        val listView = ListView(this)
+        listView.adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, promptLabels)
+        listView.dividerHeight = 0
+
+        val popupWindow = PopupWindow(
+            listView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        )
+
+        popupWindow.setBackgroundDrawable(ColorDrawable())
+        popupWindow.isOutsideTouchable = true
+        popupWindow.elevation = 10f
+        popupWindow.setOnDismissListener {
+            systemPromptPopup = null
+        }
+
+        listView.setOnItemClickListener { _, _, position, _ ->
+            val selectedPrompt = promptList[position]
+            SaveSelectedSystemPrompt(selectedPrompt)
+            popupWindow.dismiss()
+        }
+
+        listView.measure(
+            View.MeasureSpec.makeMeasureSpec(resources.displayMetrics.widthPixels, View.MeasureSpec.AT_MOST),
+            View.MeasureSpec.UNSPECIFIED
+        )
+        val popupHeight = listView.measuredHeight
+        popupWindow.showAsDropDown(btnSystemPrompt, 0, -(btnSystemPrompt.height + popupHeight))
+        systemPromptPopup = popupWindow
+    }
+
+    fun SaveSelectedSystemPrompt(selectedPrompt: OllamaSavedPrompt) {
+        val sharedPrefs = getSharedPreferences("saved_ollama_settings", Context.MODE_PRIVATE)
+        val promptList = OllamaPromptStore.loadPrompts(sharedPrefs)
+        val editor = sharedPrefs.edit()
+        editor.putString("SYSTEM_PROMPT_NAME", selectedPrompt.name)
+        editor.putString("SYSTEM_PROMPT", selectedPrompt.prompt)
+        OllamaPromptStore.savePrompts(editor, promptList)
+        editor.apply()
+        systemPromptName = selectedPrompt.name
+        systemPrompt = selectedPrompt.prompt
+        UpdateSystemPromptButton()
+        Toast.makeText(applicationContext, "System prompt selected", Toast.LENGTH_SHORT).show()
+    }
+
     /* koboldConv and ollamaConve have to be reconstructed every send as the user may have switched
     servers in-between prompts */
     fun RawToKobold() {
@@ -224,42 +349,85 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun OllamaPOST() {
-        val volleyQueue = Volley.newRequestQueue(this)
         val url = buildChatUrl(ipAdd, port)
         val data = OllamaJsonClass(
             model = model,
             messages = ollamaConv,
-            stream = false
+            stream = true
         )
         val gson = Gson()
         val jsonRaw = gson.toJson(data)
-        val jsonObj = JSONObject(jsonRaw)
-        var result = ""
-        val jsonObjectRequest = JsonObjectRequest(Request.Method.POST, url, jsonObj,
-            { response ->
-                val jsonObject = response.getJSONObject("message")
-                val jsonContent = jsonObject.getString("content")
-                result = jsonContent
-                rawConv.add("ai: " + result)
-                AddMessage(result)
-            },
-            { error ->
-                msgData.add(Message("System: " + error.toString(), 2))
-                adapter.notifyDataSetChanged()
-                recyclerview.scrollToPosition(msgData.size - 1);
-                // tvCheck.setTextColor(Color.parseColor("#FFFFFFFF"))
-                // tvCheck.text = error.toString()
-            }
-        )
-        jsonObjectRequest.setRetryPolicy(
-            DefaultRetryPolicy(
-                10000000,
-                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
-                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT
-            )
-        )
-        volleyQueue.add(jsonObjectRequest);
+        Thread {
+            var connection: HttpURLConnection? = null
+            val result = StringBuilder()
+            var hasStreamingMessage = false
 
+            try {
+                connection = (URL(url).openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    connectTimeout = 10000000
+                    readTimeout = 10000000
+                    doInput = true
+                    doOutput = true
+                    setRequestProperty("Content-Type", "application/json")
+                }
+
+                OutputStreamWriter(connection.outputStream).use { writer ->
+                    writer.write(jsonRaw)
+                    writer.flush()
+                }
+
+                val responseCode = connection.responseCode
+                val responseStream = if (responseCode in 200..299) {
+                    connection.inputStream
+                } else {
+                    connection.errorStream
+                } ?: throw IOException("HTTP $responseCode")
+
+                BufferedReader(InputStreamReader(responseStream)).use { reader ->
+                    while (true) {
+                        val line = reader.readLine() ?: break
+                        if (line.isBlank()) {
+                            continue
+                        }
+
+                        val chunk = JSONObject(line)
+                        if (responseCode !in 200..299) {
+                            throw IOException(chunk.optString("error", "HTTP $responseCode"))
+                        }
+
+                        val content = chunk.optJSONObject("message")?.optString("content").orEmpty()
+                        if (content.isNotEmpty()) {
+                            result.append(content)
+                            if (!hasStreamingMessage) {
+                                hasStreamingMessage = true
+                                runOnUiThread {
+                                    AddMessage("")
+                                }
+                            }
+                            runOnUiThread {
+                                UpdateLastAssistantMessage(result.toString())
+                            }
+                        }
+                    }
+                }
+
+                runOnUiThread {
+                    rawConv.add("ai: " + result.toString())
+                    if (!hasStreamingMessage) {
+                        AddMessage("")
+                    }
+                }
+            } catch (error: Exception) {
+                runOnUiThread {
+                    msgData.add(Message("System: " + error.toString(), 2))
+                    adapter.notifyDataSetChanged()
+                    recyclerview.scrollToPosition(msgData.size - 1);
+                }
+            } finally {
+                connection?.disconnect()
+            }
+        }.start()
     }
 
     fun buildChatUrl(ipAdd: String, port: String?): String {
@@ -346,13 +514,37 @@ class MainActivity : AppCompatActivity() {
 
 
     fun AddMessage(message: String) {
-        if (message.first() == ' ') {
+        if (message.startsWith(" ")) {
             msgData.add(Message("Assistant:" + message, 1))
         } else {
             msgData.add(Message("Assistant: " + message, 1))
         }
         adapter.notifyDataSetChanged()
-        recyclerview.scrollToPosition(msgData.size - 1);
+        ScrollToBottom()
+    }
+
+    fun UpdateLastAssistantMessage(message: String) {
+        if (msgData.isEmpty()) {
+            return
+        }
+
+        val updatedMessage = if (message.startsWith(" ")) {
+            "Assistant:$message"
+        } else {
+            "Assistant: $message"
+        }
+        msgData[msgData.size - 1] = Message(updatedMessage, 1)
+        adapter.notifyDataSetChanged()
+        ScrollToBottom()
+    }
+
+    fun ScrollToBottom() {
+        if (msgData.isEmpty()) {
+            return
+        }
+        recyclerview.post {
+            recyclerview.scrollToPosition(msgData.size - 1)
+        }
     }
 
     fun CreateFolder() {
@@ -502,8 +694,4 @@ class MainActivity : AppCompatActivity() {
             ArrayList()
         }
     }
-
-
 }
-
-
