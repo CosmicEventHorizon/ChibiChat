@@ -62,11 +62,38 @@
         android:hint="Enter the name of the model"
         android:inputType="textPersonName"
         android:textSize="10sp"
-        app:layout_constraintStart_toEndOf="@+id/tvOllamaModel"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tvOllamaModel"
         app:layout_constraintTop_toBottomOf="@id/etOllamaPort" />
 
+    <Button
+        android:id="@+id/btnOllamaPullModels"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Pull Models"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etOllamaModel" />
 
+    <Button
+        android:id="@+id/btnOllamaApplyModel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Apply Model"
+        app:layout_constraintStart_toEndOf="@id/btnOllamaPullModels"
+        app:layout_constraintTop_toBottomOf="@id/etOllamaModel" />
+
+    <Spinner
+        android:id="@+id/spOllamaModels"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnOllamaPullModels" />
 
     <TextView
         android:id="@+id/tvOllamaSystemPrompt"
@@ -78,7 +105,7 @@
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etOllamaModel" />
+        app:layout_constraintTop_toBottomOf="@id/spOllamaModels" />
 
     <EditText
         android:id="@+id/etOllamaPromptName"
